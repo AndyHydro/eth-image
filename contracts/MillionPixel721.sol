@@ -8,12 +8,17 @@ contract MyERC721 is ERC721Token("MillionPixel", "MP") {
 
     constructor () public {}
 
-    function mintTokenWithCoordinates(uint256 _tokenId, uint24[9] _colors) public {
-      require(_tokenId < 16384);
+    function mintTokenWithCoordinates(uint256[] _tokenId, uint24[9][] _colors) public {
+      require(_tokenId.length == _colors.length);
+      uint length = _tokenId.length;
 
-      super._mint(msg.sender, _tokenId);
-      colors[_tokenId] = _colors;
-      emit SquareCreation(_tokenId, _colors, msg.sender);
+      for (uint x = 0; x < length; x++) {
+        require(_tokenId[x] < 16384);
+
+        super._mint(msg.sender, _tokenId[x]);
+        colors[_tokenId[x]] = _colors[x];
+        emit SquareCreation(_tokenId[x], _colors[x], msg.sender);
+      }
     }
 
     function updateSquareColor(uint256 _tokenId, uint24[9] _colors) public onlyOwnerOf(_tokenId) {
